@@ -19,8 +19,12 @@ class GameRepository(context: Context) {
         return gameDao.getGames()
     }
 
+
     suspend fun updateBacklog(game: Game) {
         gameDao.updateGame(game)
     }
 
+    suspend fun insertGame(game: Game ) {
+        gameDao?.insertGame(game);
+    }
 }

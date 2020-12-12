@@ -20,33 +20,33 @@ class GameViewModel (application: Application) : AndroidViewModel(application) {
     val error = MutableLiveData<String>()
     val success = MutableLiveData<Boolean>()
 
-    fun updateNote(title: String, text: String) {
+
+    private val ioScope = CoroutineScope(Dispatchers.IO)
+
+
+    fun updateGame(title: String, platform : String , date: Date) {
 
         //if there is an existing note, take that id to update it instead of adding a new one
         val newGame = Game(
             id = game.value?.id,
             title = title,
             release = Date(),
-            text = text
+            platform = platform
         )
 
-        if(isGameValid(newGame)) {
             mainScope.launch {
                 withContext(Dispatchers.IO) {
                     gameRepository.updateBacklog(newGame)
                 }
                 success.value = true
             }
+
+    }
+
+    fun insertGame(game: Game) {
+        ioScope.launch {
+            gameRepository.insertGame(game)
         }
     }
 
-    private fun isGameValid(game: Game): Boolean {
-        return when {
-            game.title.isBlank() -> {
-                error.value = "Title must not be empty"
-                false
-            }
-            else -> true
-        }
-    }
 }
