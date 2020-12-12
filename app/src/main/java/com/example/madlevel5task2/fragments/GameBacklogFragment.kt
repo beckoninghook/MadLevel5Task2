@@ -7,11 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.madlevel5task2.R
+import com.example.madlevel5task2.model.Game
 import com.example.madlevel5task2.model.GameViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_add_game.*
+import kotlinx.android.synthetic.main.fragment_first.*
+import java.util.Observer
 
 
 /**
@@ -23,6 +31,8 @@ class GameBacklogFragment : Fragment() {
 
     private lateinit var navController: NavController
 
+    private val games = arrayListOf<Game>()
+    private val gameAdapter = GamesAdapter(games)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,8 +50,30 @@ class GameBacklogFragment : Fragment() {
         view.findViewById<FloatingActionButton>(R.id.fabAddGame).setOnClickListener { view ->
             navController.navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
+
+        initViews()
+
+        observeAddGameResult()
     }
 
+    private fun initViews() {
+        // Initialize the recycler view with a linear layout manager, adapter
+        rvBacklog.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        rvBacklog.adapter = gameAdapter
+        rvBacklog.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
+
+       // createItemTouchHelper().attachToRecyclerView(rvReminders)
+    }
+
+
+    private fun observeAddGameResult() {
+        viewModel.games.observe(viewLifecycleOwner , androidx.lifecycle.Observer { games ->
+            this@GameBacklogFragment.games.clear()
+            this@GameBacklogFragment.games.addAll(games)
+            gameAdapter.notifyDataSetChanged()
+        })
+    }
 
 
 }

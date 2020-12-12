@@ -20,7 +20,7 @@ abstract class GameBacklogDatabase : RoomDatabase() {
     abstract fun gameDao(): GameDao
 
     companion object {
-        private const val DATABASE_NAME = "NOTEPAD_DATABASE"
+        private const val DATABASE_NAME = "GAME_BACKLOG_DB  "
 
         @Volatile
         private var INSTANCE: GameBacklogDatabase? = null
@@ -35,22 +35,6 @@ abstract class GameBacklogDatabase : RoomDatabase() {
                             DATABASE_NAME
                         )
                             .fallbackToDestructiveMigration()
-                            .addCallback(object : RoomDatabase.Callback() {
-                                override fun onCreate(db: SupportSQLiteDatabase) {
-                                    super.onCreate(db)
-                                    INSTANCE?.let { database ->
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            database.gameDao().insertGame(
-                                                Game(
-                                                    "Title",
-                                                    Date(),
-                                                    ""
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            })
                             .build()
                     }
                 }
