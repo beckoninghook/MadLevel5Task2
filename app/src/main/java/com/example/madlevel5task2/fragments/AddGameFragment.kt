@@ -52,8 +52,8 @@ class AddGameFragment : Fragment() {
         view.findViewById<FloatingActionButton>(R.id.fabSaveGame).setOnClickListener {
             if (isFormValid(snackbar)){
                 println("form is valid")
-                //saveGame()
-                //findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+                saveGame()
+                findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
             }else {
 
                 println("form is invalid")
@@ -100,7 +100,6 @@ class AddGameFragment : Fragment() {
         val year = inputYear.text
         val dateString = "$day-$month-$year"
 
-        val sdf = SimpleDateFormat("yyyy-MM-dd")
         //regex for checking if the date is correct
         val regex = Regex(pattern = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))\$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$")
         println(regex.containsMatchIn(input = dateString))
@@ -115,7 +114,7 @@ class AddGameFragment : Fragment() {
         val year = inputYear.text
         val dateString = "$day-$month-$year"
 
-        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        val sdf = SimpleDateFormat("dd-MM-yyyy")
         val date : Date? =   sdf.parse(dateString);
 
         viewModel.insertGame(Game(tvTitle.text.toString() ,

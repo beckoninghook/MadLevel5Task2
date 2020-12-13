@@ -15,6 +15,7 @@ class GamesAdapter (private val Games: List<Game>) : RecyclerView.Adapter<GamesA
         fun databind(game: Game) {
             itemView.tvGameTitle.text = game.title
             itemView.tvGamePlatforms.text = game.platform
+            println(game.release)
             itemView.tvGameReleaseDate.text = game.release.toString()
         }
     }
