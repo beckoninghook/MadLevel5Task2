@@ -16,7 +16,6 @@ import com.example.madlevel5task2.model.GameViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_game.*
-import java.text.ParseException
 import java.text.SimpleDateFormat
 
 import java.util.*
@@ -53,10 +52,11 @@ class AddGameFragment : Fragment() {
         view.findViewById<FloatingActionButton>(R.id.fabSaveGame).setOnClickListener {
             if (isFormValid(snackbar)){
                 println("form is valid")
-                saveGame()
-                findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+                //saveGame()
+                //findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
             }else {
 
+                println("form is invalid")
             }
 
         }
@@ -82,7 +82,7 @@ class AddGameFragment : Fragment() {
             snackbar.setText("Platform is not valid")
             snackbar.show()
             false
-        }else if (dateCheck()){
+        }else if (!dateCheck()){
             snackbar.setText("Date is not valid")
             snackbar.show()
             false
@@ -101,12 +101,10 @@ class AddGameFragment : Fragment() {
         val dateString = "$day-$month-$year"
 
         val sdf = SimpleDateFormat("yyyy-MM-dd")
-        return try {
-            sdf.parse(dateString)
-            true;
-        }catch (e : ParseException){
-            false
-        }
+        //regex for checking if the date is correct
+        val regex = Regex(pattern = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))\$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})\$")
+        println(regex.containsMatchIn(input = dateString))
+        return regex.containsMatchIn(input = dateString);
 
     }
 
