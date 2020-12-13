@@ -33,4 +33,10 @@ class GameViewModel (application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteAll() {
+        ioScope.launch {
+            gameRepository.deleteAll()
+        }
+    }
+
 }

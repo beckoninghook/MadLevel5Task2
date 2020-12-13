@@ -1,11 +1,10 @@
 package com.example.madlevel5task2.fragments
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
@@ -18,6 +17,7 @@ import com.example.madlevel5task2.R
 import com.example.madlevel5task2.model.Game
 import com.example.madlevel5task2.model.GameViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_game.*
 import kotlinx.android.synthetic.main.fragment_first.*
 import java.util.Observer
@@ -76,6 +76,46 @@ class GameBacklogFragment : Fragment() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu , menuInflater: MenuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_backlog, menu)
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true);
+        activity?.title = "Game Backlog"
+
+        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true);
+    }
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_delete_all -> {
+            val backlogTemp = arrayListOf<Game>()
+            backlogTemp.addAll(games)
+            viewModel.deleteAll()
+            val snackbar = Snackbar.make(rvBacklog,
+                R.string.delete_all,
+                Snackbar.LENGTH_SHORT)
+        snackbar.setAction(R.string.undo_string, UndoClearBacklog(backlogTemp))
+            snackbar.show()
+            true
+        } else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    private inner class UndoClearBacklog(val backlogArr: ArrayList<Game>): View.OnClickListener {
+        override fun onClick(v: View) {
+            for (game in backlogArr) {
+                viewModel.insertGame(game)
+            }
+        }
+    }
+
 
     /**
      * Create a touch helper to recognize when a user swipes an item from a recycler view.
@@ -106,4 +146,6 @@ class GameBacklogFragment : Fragment() {
         }
         return ItemTouchHelper(callback)
     }
+
+
 }
